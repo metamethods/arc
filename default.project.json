@@ -1,0 +1,9 @@
+{
+  "name": "arc",
+  "tree": {
+    "$path": "./src",
+    "packages": {
+      "$path": "./roblox_packages"
+    }
+  }
+}
