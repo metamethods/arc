@@ -12,7 +12,7 @@ local testDefinition: types.TestDefinition = {
 
 		for _, selectedInstance in selection do
 			for _, instance in selectedInstance:GetDescendants() do
-				if not instance:IsA("ParticleEmitter") then
+				if not instance:IsA("ParticleEmitter") or not instance.Enabled then
 					continue
 				end
 				totalParticleEmission += emission(instance)
