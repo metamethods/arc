@@ -2,6 +2,7 @@ local Selection = game:GetService("Selection")
 
 local types = require(script.Parent.Parent.Parent.Parent.Parent.types)
 local LinkList = require(script.Parent.Parent.Parent.Parent.Parent.utils.LinkList)
+local getConnectors = require(script.Parent.Parent.Parent.Parent.Parent.utils.getConnectors)
 local map = require(script.Parent.Parent.Parent.Parent.Parent.utils.map)
 local primaryPart = require(script.Parent.Parent.Parent.Parent.Parent.utils.primaryPart)
 
@@ -9,34 +10,24 @@ local test: types.TestDefinition = {
 	title = "Constrainted",
 	description = "Checks if all instances are <b>currently constrainted to the first/primary part selected</b> <i>(If more instances are selected, it'll check if they are contrainted to the first/primary part selected)</i>",
 	fn = function(selected, suite)
-		local linkList: LinkList.LinkList<BasePart> = LinkList.new()
-
 		local primaryPart = primaryPart(selected[1])
 		local baseParts = {}
-		local unconstraintedParts = {}
+		local connectors = {}
 
 		for _, selectedInstance in selected do
+			local selectedInstanceConnectors = getConnectors(selectedInstance)
+			table.move(selectedInstanceConnectors, 1, #selectedInstanceConnectors, #connectors, connectors)
+
 			for _, instance in selectedInstance:GetDescendants() do
-				if
-					(instance:IsA("WeldConstraint") or instance:IsA("Motor6D") or instance:IsA("Weld"))
-					and instance.Active
-					and instance.Enabled
-				then
-					linkList:add(instance.Part0, instance.Part1)
-				end
-
-				if instance:IsA("Constraint") and instance.Enabled then
-					linkList:add(
-						instance.Attachment0:FindFirstAncestorWhichIsA("BasePart"),
-						instance.Attachment1:FindFirstAncestorWhichIsA("BasePart")
-					)
-				end
-
 				if instance:IsA("BasePart") then
 					table.insert(baseParts, instance)
 				end
 			end
 		end
+
+		local linkList: LinkList.LinkList<BasePart> = LinkList.fromConnectors(connectors)
+
+		local unconstraintedParts = {}
 
 		for _, basePart in baseParts do
 			if basePart == primaryPart then
