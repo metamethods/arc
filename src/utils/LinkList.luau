@@ -8,6 +8,33 @@ function LinkList.new<T>(): LinkList<T>
 	}, LinkList) :: LinkList<T>
 end
 
+function LinkList.fromConnectors(connectors: { Constraint | WeldConstraint | Weld }): LinkList<BasePart>
+	local linkList = LinkList.new()
+
+	for _, connector in connectors do
+		if connector:IsA("WeldConstraint") or connector:IsA("Motor6D") or connector:IsA("Weld") then
+			if not connector.Active or not connector.Enabled then
+				continue
+			end
+
+			linkList:add(connector.Part0, connector.Part1)
+		end
+
+		if connector:IsA("Constraint") then
+			if not connector.Enabled or not connector.Active then
+				continue
+			end
+
+			linkList:add(
+				connector.Attachment0:FindFirstAncestorWhichIsA("BasePart"),
+				connector.Attachment1:FindFirstAncestorWhichIsA("BasePart")
+			)
+		end
+	end
+
+	return linkList
+end
+
 function LinkList.add<T>(self: LinkList<T>, link0: T, link1: T)
 	table.insert(self.links, {
 		link0 = link0,
@@ -31,7 +58,7 @@ function LinkList.linkedTo<T>(
 	self: LinkList<T>,
 	start: T,
 	target: T,
-	check: CheckFn<T>,
+	check: CheckFn<T>?,
 	visited: { [T]: boolean }?
 ): boolean
 	local visited = visited or {}
