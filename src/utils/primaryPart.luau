@@ -1,4 +1,4 @@
-local function primaryPart(instance: BasePart | Model): BasePart
+local function primaryPart(instance: BasePart | Model): BasePart?
 	if instance:IsA("Model") then
 		return instance.PrimaryPart
 			or instance:FindFirstChildOfClass("Part")
@@ -6,7 +6,11 @@ local function primaryPart(instance: BasePart | Model): BasePart
 			or instance:FindFirstChildOfClass("MeshPart")
 	end
 
-	return instance
+	if instance:IsA("BasePart") then
+		return instance
+	end
+
+	return
 end
 
 return primaryPart
