@@ -27,8 +27,17 @@ function LinkList.findConnections<T>(self: LinkList<T>, from: T): { Link<T> }
 	return links
 end
 
-function LinkList.linkedTo<T>(self: LinkList<T>, start: T, target: T, visited: { [T]: boolean }?): boolean
+function LinkList.linkedTo<T>(
+	self: LinkList<T>,
+	start: T,
+	target: T,
+	check: CheckFn<T>,
+	visited: { [T]: boolean }?
+): boolean
 	local visited = visited or {}
+	local check = check or function(item, target)
+		return item == target
+	end
 
 	if self.cache[start] then
 		return self.cache[start]
@@ -39,14 +48,14 @@ function LinkList.linkedTo<T>(self: LinkList<T>, start: T, target: T, visited: {
 	visited[start] = true
 
 	for _, link in self:findConnections(start) do
-		if link.link0 == target or link.link1 == target then
+		if check(link.link0, target) or check(link.link1, target) then
 			self.cache[start] = true
 			return true
 		end
 
 		if
-			(link.link0 ~= start and self:linkedTo(link.link0, target, visited))
-			or (link.link1 ~= start and self:linkedTo(link.link1, target, visited))
+			(link.link0 ~= start and self:linkedTo(link.link0, target, check, visited))
+			or (link.link1 ~= start and self:linkedTo(link.link1, target, check, visited))
 		then
 			self.cache[start] = true
 			return true
@@ -56,6 +65,8 @@ function LinkList.linkedTo<T>(self: LinkList<T>, start: T, target: T, visited: {
 	self.cache[start] = false
 	return false
 end
+
+type CheckFn<T> = (item: T, target: T) -> boolean?
 
 type Link<T> = {
 	link0: T,
