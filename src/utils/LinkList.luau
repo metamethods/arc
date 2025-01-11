@@ -21,7 +21,11 @@ function LinkList.fromConnectors(connectors: { Constraint | WeldConstraint | Wel
 		end
 
 		if connector:IsA("Constraint") then
-			if not connector.Enabled or not connector.Active then
+			if not connector.Enabled then
+				continue
+			end
+
+			if not connector.Attachment0 or not connector.Attachment1 then
 				continue
 			end
 
