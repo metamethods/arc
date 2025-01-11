@@ -8,7 +8,7 @@ local primaryPart = require(script.Parent.Parent.Parent.Parent.Parent.utils.prim
 local test: types.TestDefinition = {
 	title = "Constrainted",
 	description = "Checks if all instances are <b>currently constrainted to the first/primary part selected</b> <i>(If more instances are selected, it'll check if they are contrainted to the first/primary part selected)</i>",
-	fn = function(selected)
+	fn = function(selected, suite)
 		local linkList: LinkList.LinkList<BasePart> = LinkList.new()
 
 		local primaryPart = primaryPart(selected[1])
@@ -42,7 +42,28 @@ local test: types.TestDefinition = {
 			if basePart == primaryPart then
 				continue
 			end -- ignore
-			if not linkList:linkedTo(basePart, primaryPart) then
+
+			-- rex specific stuff
+			if suite == "rex" then
+				if basePart.Anchored then
+					continue
+				end
+			end
+
+			if
+				not linkList:linkedTo(
+					basePart,
+					primaryPart,
+					if suite == "rex"
+						then function(item, target)
+							if item.Anchored then
+								return true
+							end
+							return item == target
+						end
+						else nil
+				)
+			then
 				table.insert(unconstraintedParts, basePart)
 			end
 		end

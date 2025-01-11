@@ -31,7 +31,7 @@ export type TestResult = {
 	stack: { StackEntry },
 }
 
-export type TestFn = (selection: { BasePart | Model }) -> TestResult
+export type TestFn = (selection: { BasePart | Model }, selectedSuite: SuiteType) -> TestResult
 
 export type TestDefinition = {
 	title: string,
