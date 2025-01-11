@@ -9,6 +9,7 @@ local types = require(script.Parent.Parent.Parent.types)
 local tests = require(script.tests)
 
 local Children = Fusion.Children
+local peek = Fusion.peek
 
 local function Tests(scope: types.AppScope)
 	local scope = scope:deriveScope({
@@ -61,11 +62,11 @@ local function Tests(scope: types.AppScope)
 			scope:Computed(function(use, scope: typeof(scope))
 				return scope:ForValues(
 					tests[use(scope.selectedSuite)] or {},
-					function(_, scope: typeof(scope), testDefinition)
+					function(_, scope: typeof(scope), testDefinition: types.TestDefinition)
 						local result: Fusion.Value<types.TestResult?> = scope:Value()
 
 						local function runTest()
-							result:set(testDefinition.fn(Fusion.peek(scope.selected)))
+							result:set(testDefinition.fn(peek(scope.selected), peek(scope.selectedSuite)))
 						end
 
 						local function clearTest()
@@ -73,8 +74,10 @@ local function Tests(scope: types.AppScope)
 						end
 
 						-- add this to scope which it can be cleanuped later
-						table.insert(scope, runTestsEvent.Event:Connect(runTest))
-						table.insert(scope, clearTestsEvent.Event:Connect(clearTest))
+						table.insert(scope, {
+							runTestsEvent.Event:Connect(runTest),
+							clearTestsEvent.Event:Connect(clearTest),
+						})
 
 						return scope:Test {
 							test = testDefinition,
