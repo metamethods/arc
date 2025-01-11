@@ -1,0 +1,18 @@
+name: CI
+
+on:
+    push:
+        branches:
+            - master
+    pull_request:
+        branches:
+            - master
+
+jobs:
+    ci:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v4
+            - uses: CompeyDev/setup-rokit@v0.1.2
+            - run: selene .
+            - run: stylua --check .
