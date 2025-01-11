@@ -6,6 +6,7 @@ local actions: { [types.SuiteType]: types.ActionDefinition } = {
 		require(script.randomizeColors),
 		require(script.randomizeHueShift),
 		require(script.rainbow),
+		require(script.shiftTime),
 	},
 	rex = {
 		require(script.rex.ionize),
@@ -14,6 +15,7 @@ local actions: { [types.SuiteType]: types.ActionDefinition } = {
 		require(script.randomizeColors),
 		require(script.randomizeHueShift),
 		require(script.rainbow),
+		require(script.shiftTime),
 		require(script.rex.prepare),
 	},
 	sols_rng = {
@@ -21,6 +23,7 @@ local actions: { [types.SuiteType]: types.ActionDefinition } = {
 		require(script.randomizeColors),
 		require(script.randomizeHueShift),
 		require(script.rainbow),
+		require(script.shiftTime),
 	},
 }
 
