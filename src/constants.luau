@@ -1,5 +1,5 @@
 return {
 	PLUGIN_NAME = "Arc",
 	PLUGIN_ID = "arc",
-	PLUGIN_VERSION = "1.1.0",
+	PLUGIN_VERSION = "1.1.1",
 }
