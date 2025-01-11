@@ -1,5 +1,5 @@
 name = "metamethods/arc"
-version = "1.2.0"
+version = "1.2.1"
 description = "VFX format test suite for Roblox Games"
 authors = ["metamethods"]
 license = "MIT"
