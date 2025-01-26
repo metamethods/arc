@@ -7,8 +7,8 @@ local action: types.ActionDefinition = {
 	checkFn = requireSelection,
 	fn = function(selection)
 		for _, selectedInstance in selection do
-			selectedInstance:SetAttribute("Ionized", false)
-			selectedInstance:SetAttribute("Spectralized", false)
+			selectedInstance:SetAttribute("Ionized", nil)
+			selectedInstance:SetAttribute("Spectral", nil)
 
 			for _, instance in selectedInstance:GetDescendants() do
 				if instance:IsA("Sound") then
