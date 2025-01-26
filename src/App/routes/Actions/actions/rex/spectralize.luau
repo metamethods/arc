@@ -21,7 +21,7 @@ local action: types.ActionDefinition = {
 				return newColor
 			end)
 
-			primaryPart(selectedInstance):SetAttribute("Spectralized", true)
+			primaryPart(selectedInstance, true):SetAttribute("Spectralized", true)
 		end
 	end,
 }
