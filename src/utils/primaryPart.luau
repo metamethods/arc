@@ -1,4 +1,4 @@
-local function primaryPart(instance: BasePart | Model): BasePart?
+local function primaryPart(instance: BasePart | Model, required: boolean): BasePart?
 	if instance:IsA("Model") then
 		return instance.PrimaryPart
 			or instance:FindFirstChildOfClass("Part")
@@ -10,7 +10,11 @@ local function primaryPart(instance: BasePart | Model): BasePart?
 		return instance
 	end
 
+	if required then
+		assert(required, `Primary Part doesn't exist for {instance:GetFullName()}`)
+	end
+
 	return
 end
 
-return primaryPart
+return primaryPart :: ((instance: BasePart | Model) -> BasePart?) & ((instance: BasePart | Model, required: boolean) -> BasePart)
