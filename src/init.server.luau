@@ -35,7 +35,7 @@ local appWidget = Widget(plugin) {
 
 ToolbarButton(toolbar) {
 	id = constants.PLUGIN_ID,
-	icon = "",
+	icon = "rbxassetid://86954494133699",
 	tooltip = `Click to toggle the {constants.PLUGIN_NAME} window`,
 	clicked = function()
 		appWidget.Enabled = not appWidget.Enabled
