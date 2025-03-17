@@ -1,3 +1,5 @@
+local Selection = game:GetService("Selection")
+
 local Button = require(script.Parent.components.Button)
 local Dropdown = require(script.Parent.components.Dropdown)
 local Flex = require(script.Parent.components.Flex)
@@ -10,11 +12,16 @@ local Text = require(script.Parent.components.Text)
 local Fusion = require(script.Parent.packages.Fusion)
 local suites = require(script.Parent.suites)
 local types = require(script.Parent.types)
+local filter = require(script.Parent.utils.filter)
 local map = require(script.Parent.utils.map)
+local nullifyEmpty = require(script.Parent.utils.nullifyEmpty)
+local primaryPart = require(script.Parent.utils.primaryPart)
 local Theme = require(script.Theme)
 local tabs = require(script.tabs)
 
 local Children = Fusion.Children
+
+local peek = Fusion.peek
 
 local function App(scope: types.AppScope)
 	local scope = scope:deriveScope({
@@ -104,7 +111,14 @@ local function App(scope: types.AppScope)
 							return `<b>{if use(scope.selectionLocked) then "Unlock" else "Lock"}</b> selection`
 						end),
 						clicked = function()
-							scope.selectionLocked:set(not Fusion.peek(scope.selectionLocked))
+							scope.selectionLocked:set(not peek(scope.selectionLocked))
+							if not peek(scope.selectionLocked) then
+								-- TODO: CHANGE THIS PLEASEEEEEEE
+								scope.rawSelected:set(Selection:Get())
+								scope.selected:set(nullifyEmpty(filter(Selection:Get(), function(instance)
+									return (instance:IsA("BasePart") or instance:IsA("Model")) and primaryPart(instance)
+								end)))
+							end
 						end,
 						outline = true,
 					},
