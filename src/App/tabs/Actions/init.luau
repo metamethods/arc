@@ -39,7 +39,6 @@ local function Actions(scope: types.AppScope)
 						fontWeight = Enum.FontWeight.Bold,
 					},
 
-					-- TODO: Turn this into a component?
 					scope:Fragment {
 						padding = UDim.new(0, 4),
 
