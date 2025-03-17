@@ -12,7 +12,7 @@ export type AppScope = Fusion.Scope<typeof(Fusion) & {
 	plugin: Plugin,
 }>
 
-export type Route = {
+export type Tab = {
 	name: string,
 	component: (scope: AppScope) -> Fusion.Child,
 }

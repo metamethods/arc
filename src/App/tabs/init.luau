@@ -9,9 +9,4 @@ return {
 		name = "Actions",
 		component = require(script.Actions),
 	},
-	-- TODO: Future update
-	-- {
-	-- 	name = "Settings",
-	-- 	component = require(script.Settings),
-	-- },
-} :: { types.Route }
+} :: { types.Tab }

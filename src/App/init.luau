@@ -12,7 +12,7 @@ local suites = require(script.Parent.suites)
 local types = require(script.Parent.types)
 local map = require(script.Parent.utils.map)
 local Theme = require(script.Theme)
-local routes = require(script.routes)
+local tabs = require(script.tabs)
 
 local Children = Fusion.Children
 
@@ -30,7 +30,7 @@ local function App(scope: types.AppScope)
 		Theme = Theme,
 	})
 
-	local selectedTab = scope:Value(routes[1].component)
+	local selectedTab = scope:Value(tabs[1].component)
 
 	return scope:New "Frame" {
 		BackgroundColor3 = scope:Theme("background"),
@@ -50,7 +50,7 @@ local function App(scope: types.AppScope)
 				root = scope:Flex(),
 
 				[Children] = {
-					scope:ForValues(routes, function(_, scope: typeof(scope), route)
+					scope:ForValues(tabs, function(_, scope: typeof(scope), route)
 						return scope:Button {
 							text = route.name,
 							primary = scope:Computed(function(use)
