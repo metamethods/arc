@@ -5,7 +5,7 @@
 
 [tools]
 rojo = "rojo-rbx/rojo@7.4.4"
-pesde = "pesde-pkg/pesde@0.5.3+registry.0.1.2"
+pesde = "pesde-pkg/pesde@0.6.2+registry.0.2.2"
 lune = "lune-org/lune@0.8.9"
 stylua = "JohnnyMorganz/stylua@2.0.2"
 selene = "Kampfkarren/selene@0.27.1"
