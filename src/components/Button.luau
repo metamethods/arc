@@ -13,6 +13,7 @@ type UsedAs<T> = Fusion.UsedAs<T>
 type ButtonProps = {
 	size: UDim2?,
 	text: UsedAs<string>?,
+	textXAlignment: UsedAs<Enum.TextXAlignment>?,
 	primary: UsedAs<boolean>?,
 	disabled: UsedAs<boolean>?,
 	cornerRadius: UDim?,
@@ -64,7 +65,7 @@ local function Button(scope: Fusion.Scope<typeof(Fusion)>, props: ButtonProps)
 			return if use(props.primary) then use(scope:Theme("text_light")) else use(scope:Theme("text"))
 		end),
 		FontFace = Font.fromName("Montserrat", Enum.FontWeight.Medium),
-		TextXAlignment = Enum.TextXAlignment.Left,
+		TextXAlignment = props.textXAlignment or Enum.TextXAlignment.Left,
 
 		[OnEvent "MouseButton1Down"] = function()
 			pressed:set(true)
