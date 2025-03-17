@@ -1,8 +1,10 @@
 local ChangeHistoryService = game:GetService("ChangeHistoryService")
+local ProcessInstancePhysicsService = game:GetService("ProcessInstancePhysicsService")
 
 local Action = require(script.Parent.Parent.Parent.components.Action)
 local Divider = require(script.Parent.Parent.Parent.components.Divider)
 local Fragment = require(script.Parent.Parent.Parent.components.Fragment)
+local InstancesList = require(script.Parent.Parent.Parent.components.InstancesList)
 local Page = require(script.Parent.Parent.Parent.components.Page)
 local Text = require(script.Parent.Parent.Parent.components.Text)
 local Fusion = require(script.Parent.Parent.Parent.packages.Fusion)
@@ -17,6 +19,7 @@ local function Actions(scope: types.AppScope)
 	local scope = scope:deriveScope({
 		Page = Page,
 		Action = Action,
+		InstancesList = InstancesList,
 		Fragment = Fragment,
 		Text = Text,
 		Divider = Divider,
@@ -25,37 +28,26 @@ local function Actions(scope: types.AppScope)
 
 	return scope:Page {
 		[Children] = {
-			scope:Text {
-				text = scope:Computed(function(use)
-					return `Selected instance{plural(#use(scope.rawSelected))}`
-				end),
-			},
-
-			-- TODO: Turn this into a component?
 			scope:Fragment {
 				padding = UDim.new(0, 4),
 
-				[Children] = scope:ForValues(scope.rawSelected, function(_, scope: typeof(scope), instance)
-					return scope:Fragment {
-						direction = Enum.FillDirection.Horizontal,
+				[Children] = {
+					scope:Text {
+						text = scope:Computed(function(use)
+							return `Selected instance{plural(#use(scope.rawSelected))}`
+						end),
+						fontWeight = Enum.FontWeight.Bold,
+					},
+
+					-- TODO: Turn this into a component?
+					scope:Fragment {
 						padding = UDim.new(0, 4),
 
-						[Children] = {
-							scope:New "ImageLabel" {
-								Size = UDim2.fromOffset(16, 16),
-								BackgroundTransparency = 1,
-
-								Image = "rbxassetid://104624195613642",
-								ImageColor3 = scope:Theme("text"),
-							},
-
-							scope:Text {
-								text = instance:GetFullName(),
-								fontWeight = Enum.FontWeight.Bold,
-							},
+						[Children] = scope:InstancesList {
+							instances = scope.rawSelected,
 						},
-					}
-				end),
+					},
+				},
 			},
 
 			scope:Divider(),
