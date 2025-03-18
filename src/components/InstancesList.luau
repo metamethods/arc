@@ -21,8 +21,8 @@ local function InstancesList(scope: Fusion.Scope<typeof(Fusion)>, props: Instanc
 	return scope:Computed(function(use, scope: typeof(scope))
 		if #use(props.instances) == 0 then
 			return scope:Text {
-				text = "<i>No instances selected</i>",
-				textColor = scope:Theme "subtext",
+				text = "<i>No instances</i>",
+				textColor = scope:Theme("subtext"),
 			}
 		end
 
@@ -42,7 +42,7 @@ local function InstancesList(scope: Fusion.Scope<typeof(Fusion)>, props: Instanc
 
 					scope:Text {
 						text = instance:GetFullName(),
-						-- fontWeight = Enum.FontWeight.Medium,
+						size = UDim2.new(1, -20, 0, 0),
 					},
 				},
 			}
