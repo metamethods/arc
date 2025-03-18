@@ -27,7 +27,7 @@ type SelectionInfo = {
 	totalParticleEmission: number,
 	totalBeamSegments: number,
 	instances: { [string]: number },
-	colors: { [Color3]: Color3 },
+	colors: { [string]: Color3 },
 }
 
 local function Selection(scope: types.AppScope)
@@ -101,12 +101,12 @@ local function Selection(scope: types.AppScope)
 
 							if color then
 								if typeof(color) == "Color3" then
-									colors[color] = color
+									colors[color:ToHSV()] = color
 								elseif typeof(color) == "BrickColor" then
-									colors[color.Color] = color.Color
+									colors[color.Color:ToHSV()] = color.Color
 								else
 									for _, keypoint in color.Keypoints do
-										colors[keypoint.Value] = keypoint.Value
+										colors[keypoint.Value:ToHSV()] = keypoint.Value
 									end
 								end
 							end
