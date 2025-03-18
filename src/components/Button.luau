@@ -13,6 +13,8 @@ type UsedAs<T> = Fusion.UsedAs<T>
 type ButtonProps = {
 	size: UDim2?,
 	text: UsedAs<string>?,
+	fontWeight: Enum.FontWeight?,
+	textSize: UsedAs<number>?,
 	textXAlignment: UsedAs<Enum.TextXAlignment>?,
 	primary: UsedAs<boolean>?,
 	disabled: UsedAs<boolean>?,
@@ -60,11 +62,11 @@ local function Button(scope: Fusion.Scope<typeof(Fusion)>, props: ButtonProps)
 		Text = props.text,
 		RichText = true,
 		TextWrapped = true,
-		TextSize = 16,
+		TextSize = props.textSize or 16,
 		TextColor3 = scope:Computed(function(use, scope)
 			return if use(props.primary) then use(scope:Theme("text_light")) else use(scope:Theme("text"))
 		end),
-		FontFace = Font.fromName("Montserrat", Enum.FontWeight.Medium),
+		FontFace = Font.fromName("Montserrat", props.fontWeight or Enum.FontWeight.Medium),
 		TextXAlignment = props.textXAlignment or Enum.TextXAlignment.Left,
 
 		[OnEvent "MouseButton1Down"] = function()
