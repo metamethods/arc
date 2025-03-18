@@ -9,4 +9,8 @@ return {
 		name = "Actions",
 		component = require(script.Actions),
 	},
+	{
+		name = "Selection",
+		component = require(script.Selection),
+	},
 } :: { types.Tab }

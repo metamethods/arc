@@ -6,6 +6,8 @@ local Children = Fusion.Children
 type UsedAs<T> = Fusion.UsedAs<T>
 
 type FragmentProps = {
+	backgroundColor: UsedAs<Color3>?,
+	backgroundTransparency: UsedAs<number>?,
 	size: UsedAs<UDim2>?,
 	automaticSize: UsedAs<Enum.AutomaticSize>?,
 	padding: UDim?,
@@ -25,7 +27,8 @@ local function Fragment(scope: Fusion.Scope<typeof(Fusion)>, props: FragmentProp
 	})
 
 	return scope:New "Frame" {
-		BackgroundTransparency = 1,
+		BackgroundColor3 = props.backgroundColor,
+		BackgroundTransparency = props.backgroundTransparency or 1,
 		Size = props.size or UDim2.fromScale(1, 0),
 		AutomaticSize = props.automaticSize or Enum.AutomaticSize.Y,
 		LayoutOrder = props.layoutOrder or 0,

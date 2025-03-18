@@ -33,7 +33,7 @@ local function Container(scope: Fusion.Scope<typeof(Fusion)>, props: ContainerPr
 		[Children] = {
 			props[Children],
 
-			scope:Padding(UDim.new(0, 8)),
+			scope:Padding(props.padding or UDim.new(0, 8)),
 			scope:Rounded(),
 		},
 	}
