@@ -37,7 +37,10 @@ local function App(scope: types.AppScope)
 		Theme = Theme,
 	})
 
-	local selectedTab = scope:Value(tabs[1].component)
+	local tabComponents = map(tabs, function(tab)
+		return tab.component(scope)
+	end)
+	local selectedTab = scope:Value(1)
 
 	return scope:New "Frame" {
 		BackgroundColor3 = scope:Theme("background"),
@@ -56,19 +59,26 @@ local function App(scope: types.AppScope)
 
 				root = scope:Flex(),
 
-				[Children] = {
-					scope:ForValues(tabs, function(_, scope: typeof(scope), route)
-						return scope:Button {
-							text = route.name,
-							primary = scope:Computed(function(use)
-								return use(selectedTab) == route.component
-							end),
-							clicked = function()
-								selectedTab:set(route.component)
-							end,
-						}
-					end),
-				},
+				[Children] = scope:Computed(function(_, scope: typeof(scope))
+					local components = {}
+
+					for i, tab in tabs do
+						table.insert(
+							components,
+							scope:Button {
+								text = tab.name,
+								primary = scope:Computed(function(use)
+									return use(selectedTab) == i
+								end),
+								clicked = function()
+									selectedTab:set(i)
+								end,
+							}
+						)
+					end
+
+					return components
+				end),
 			},
 
 			scope:New "Frame" {
@@ -76,8 +86,8 @@ local function App(scope: types.AppScope)
 				Size = UDim2.fromScale(1, 1),
 				ClipsDescendants = true,
 
-				[Children] = scope:Computed(function(use, scope)
-					return use(selectedTab)(scope)
+				[Children] = scope:Computed(function(use, _)
+					return tabComponents[use(selectedTab)]
 				end),
 			},
 
