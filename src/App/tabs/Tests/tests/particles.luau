@@ -6,7 +6,7 @@ local MAX_PARTICLE_EMISSION = 8_000
 
 local testDefinition: types.TestDefinition = {
 	title = "Particles",
-	description = `Checks if the total emission of selected instance(s) is <b>under {MAX_PARTICLE_EMISSION}/s</b>`,
+	description = `Checks if the total emission of selected instance(s) is <b>under {MAX_PARTICLE_EMISSION}</b>`,
 	fn = function(selection)
 		local totalParticleEmission = 0
 
@@ -22,12 +22,12 @@ local testDefinition: types.TestDefinition = {
 		if totalParticleEmission <= MAX_PARTICLE_EMISSION then
 			return {
 				success = true,
-				message = `Current emitting <b>{round(totalParticleEmission, 2)}/s</b>`,
+				message = `Total emission <b>{round(totalParticleEmission, 2)}</b> particles`,
 			}
 		else
 			return {
 				success = false,
-				message = `Current emitting <b>{round(totalParticleEmission, 2)}/s</b> which is greater than <b>{MAX_PARTICLE_EMISSION}</b>`,
+				message = `Total emission of <b>{round(totalParticleEmission, 2)}</b> particles which is greater than <b>{MAX_PARTICLE_EMISSION}</b>`,
 			}
 		end
 	end,

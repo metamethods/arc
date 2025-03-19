@@ -10,6 +10,7 @@ local Text = require(script.Parent.Parent.Parent.components.Text)
 local Fusion = require(script.Parent.Parent.Parent.packages.Fusion)
 local types = require(script.Parent.Parent.Parent.types)
 local emission = require(script.Parent.Parent.Parent.utils.emission)
+local emissionBySecond = require(script.Parent.Parent.Parent.utils.emissionBySecond)
 local getProperty = require(script.Parent.Parent.Parent.utils.getProperty)
 local instances = require(script.Parent.Parent.Parent.utils.instances)
 local plural = require(script.Parent.Parent.Parent.utils.plural)
@@ -25,6 +26,7 @@ local peek = Fusion.peek
 type SelectionInfo = {
 	totalInstances: number,
 	totalParticleEmission: number,
+	totalParticlePerSecondEmission: number,
 	totalBeamSegments: number,
 	instances: { [string]: number },
 	colors: { [string]: Color3 },
@@ -80,6 +82,7 @@ local function Selection(scope: types.AppScope)
 				clicked = function()
 					local totalInstances = 0
 					local totalParticleEmission = 0
+					local totalParticlePerSecondEmission = 0
 					local totalBeamSegments = 0
 					local instancesTable = {}
 					local colors = {}
@@ -94,6 +97,7 @@ local function Selection(scope: types.AppScope)
 								totalBeamSegments += instance.Segments
 							elseif instance:IsA("ParticleEmitter") then
 								totalParticleEmission += emission(instance)
+								totalParticlePerSecondEmission += emissionBySecond(instance)
 							end
 
 							local color: (Color3 | BrickColor | ColorSequence)? =
@@ -116,6 +120,7 @@ local function Selection(scope: types.AppScope)
 					selectionInfo:set({
 						totalInstances = totalInstances,
 						totalParticleEmission = totalParticleEmission,
+						totalParticlePerSecondEmission = totalParticlePerSecondEmission,
 						totalBeamSegments = totalBeamSegments,
 						instances = instancesTable,
 						colors = colors,
@@ -152,16 +157,35 @@ local function Selection(scope: types.AppScope)
 							wraps = true,
 							[Children] = {
 								scope:KeyValue {
-									key = "Total Particles/s",
-									value = `{round(selectionInfo.totalParticleEmission, 2)}/s`,
+									key = "Total Concurrent Particles",
+									value = round(selectionInfo.totalParticleEmission, 2),
 								},
 								scope:KeyValue {
-									key = "Average Particles/s",
+									key = "Average Concurrent Particles",
 									value = `{round(
 										selectionInfo.totalParticleEmission
 											/ (selectionInfo.instances["ParticleEmitter"] or 0),
 										2
-									)}/a`,
+									)}/avg`,
+								},
+							},
+						},
+
+						scope:Fragment {
+							direction = Enum.FillDirection.Horizontal,
+							wraps = true,
+							[Children] = {
+								scope:KeyValue {
+									key = "Total Particles/s",
+									value = `{round(selectionInfo.totalParticlePerSecondEmission, 2)}/s`,
+								},
+								scope:KeyValue {
+									key = "Average Particles/s",
+									value = `{round(
+										selectionInfo.totalParticlePerSecondEmission
+											/ (selectionInfo.instances["ParticleEmitter"] or 0),
+										2
+									)}/s/avg`,
 								},
 							},
 						},
@@ -172,14 +196,14 @@ local function Selection(scope: types.AppScope)
 							[Children] = {
 								scope:KeyValue {
 									key = "Total Beam Segments",
-									value = `{selectionInfo.totalBeamSegments}/s`,
+									value = selectionInfo.totalBeamSegments,
 								},
 								scope:KeyValue {
 									key = "Average Beam Segements",
 									value = `{round(
 										selectionInfo.totalBeamSegments / (selectionInfo.instances["Beam"] or 0),
 										2
-									)}/a`,
+									)}/avg`,
 								},
 							},
 						},
