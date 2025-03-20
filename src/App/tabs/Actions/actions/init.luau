@@ -9,6 +9,7 @@ local actions: { [types.SuiteType]: types.ActionDefinition } = {
 		require(script.grayscale),
 		require(script.shiftTime),
 		require(script.smartWelder),
+		require(script.fish),
 	},
 	rex = {
 		require(script.rex.ionize),
