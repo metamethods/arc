@@ -1,5 +1,5 @@
 local Button = require(script.Parent.Button)
-local Container = require(script.Parent.Container)
+local Frame = require(script.Parent.Frame)
 local Divider = require(script.Parent.Divider)
 local Fragment = require(script.Parent.Fragment)
 local Padding = require(script.Parent.Padding)
@@ -24,7 +24,7 @@ type TestProps = {
 local function Test(scope: Fusion.Scope<typeof(Fusion)>, props: TestProps)
 	local scope = scope:deriveScope({
 		StackEntry = StackEntry,
-		Container = Container,
+		Frame = Frame,
 		Fragment = Fragment,
 		ScrollableFragment = ScrollableFragment,
 		Button = Button,
@@ -48,7 +48,7 @@ local function Test(scope: Fusion.Scope<typeof(Fusion)>, props: TestProps)
 		direction = Enum.FillDirection.Vertical,
 
 		[Children] = {
-			scope:Container {
+			scope:Frame {
 				[Children] = {
 					scope:Fragment {
 						padding = UDim.new(0, 8),
@@ -124,7 +124,7 @@ local function Test(scope: Fusion.Scope<typeof(Fusion)>, props: TestProps)
 				},
 			},
 
-			scope:Container {
+			scope:Frame {
 				visible = scope:Computed(function(use)
 					local result = use(props.result)
 					if not result or #(result.stack or {}) == 0 then

@@ -1,7 +1,8 @@
 local Button = require(script.Parent.Button)
-local Container = require(script.Parent.Container)
+local Frame = require(script.Parent.Frame)
 local Divider = require(script.Parent.Divider)
 local Fragment = require(script.Parent.Fragment)
+local Padding = require(script.Parent.Padding)
 local Theme = require(script.Parent.Parent.App.Theme)
 local Fusion = require(script.Parent.Parent.packages.Fusion)
 local Rounded = require(script.Parent.Rounded)
@@ -21,7 +22,7 @@ type ExpandableSectionProps = {
 
 local function ExpandableSection(scope: Fusion.Scope<typeof(Fusion)>, props: ExpandableSectionProps)
 	local scope = scope:deriveScope({
-		Container = Container,
+		Frame = Frame,
 		Fragment = Fragment,
 		Button = Button,
 		Text = Text,
@@ -30,7 +31,7 @@ local function ExpandableSection(scope: Fusion.Scope<typeof(Fusion)>, props: Exp
 		Theme = Theme,
 	})
 
-	return scope:Container {
+	return scope:Frame {
 		padding = UDim.new(0, 0),
 
 		[Children] = scope:Fragment {
@@ -49,7 +50,7 @@ local function ExpandableSection(scope: Fusion.Scope<typeof(Fusion)>, props: Exp
 
 				scope:Computed(function(use)
 					return if use(props.open)
-						then scope:Container {
+						then scope:Frame {
 							[Children] = scope:Fragment {
 								[Children] = props[Children],
 							},

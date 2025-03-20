@@ -10,10 +10,15 @@ type UsedAs<T> = Fusion.UsedAs<T>
 type TextBoxProps = {
 	backgroundColor: UsedAs<Color3>?,
 	text: Fusion.Value<string>,
+	textXAlignment: Enum.TextXAlignment?,
 	placeholderText: UsedAs<string>?,
 	textSize: UsedAs<number>,
 	textColor: UsedAs<Color3>?,
 	placeholderColor: UsedAs<Color3>?,
+	size: UsedAs<UDim2>?,
+	automaticSize: UsedAs<Enum.AutomaticSize>?,
+	position: UsedAs<UDim2>?,
+	anchorPoint: UsedAs<Vector2>?,
 	fontWeight: Enum.FontWeight?,
 	editable: UsedAs<boolean>?,
 }
@@ -27,7 +32,10 @@ local function TextBox(scope: Fusion.Scope<typeof(Fusion)>, props: TextBoxProps)
 
 	return scope:New "TextBox" {
 		BackgroundColor3 = props.backgroundColor or scope:Theme("middle"),
-		AutomaticSize = Enum.AutomaticSize.XY,
+		Position = props.position,
+		AnchorPoint = props.anchorPoint,
+		Size = props.size,
+		AutomaticSize = props.automaticSize or Enum.AutomaticSize.XY,
 
 		Text = props.text,
 		PlaceholderText = props.placeholderText or "",
@@ -37,6 +45,8 @@ local function TextBox(scope: Fusion.Scope<typeof(Fusion)>, props: TextBoxProps)
 		FontFace = Font.fromName("Montserrat", props.fontWeight or Enum.FontWeight.Medium),
 		ClearTextOnFocus = false,
 		TextEditable = props.editable,
+		TextXAlignment = props.textXAlignment or Enum.TextXAlignment.Left,
+		ClipsDescendants = true,
 
 		[Children] = {
 			scope:Padding(UDim.new(0, 4), UDim.new(0, 6)),

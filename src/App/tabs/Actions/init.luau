@@ -3,12 +3,11 @@ local ChangeHistoryService = game:GetService("ChangeHistoryService")
 local Action = require(script.Parent.Parent.Parent.components.Action)
 local Divider = require(script.Parent.Parent.Parent.components.Divider)
 local Fragment = require(script.Parent.Parent.Parent.components.Fragment)
-local InstancesList = require(script.Parent.Parent.Parent.components.InstancesList)
 local Page = require(script.Parent.Parent.Parent.components.Page)
+local SelectedInstances = require(script.Parent.Parent.Parent.components.SelectedInstances)
 local Text = require(script.Parent.Parent.Parent.components.Text)
 local Fusion = require(script.Parent.Parent.Parent.packages.Fusion)
 local types = require(script.Parent.Parent.Parent.types)
-local plural = require(script.Parent.Parent.Parent.utils.plural)
 local Theme = require(script.Parent.Parent.Theme)
 local actions = require(script.actions)
 
@@ -18,7 +17,7 @@ local function Actions(scope: types.AppScope)
 	local scope = scope:deriveScope({
 		Page = Page,
 		Action = Action,
-		InstancesList = InstancesList,
+		SelectedInstances = SelectedInstances,
 		Fragment = Fragment,
 		Text = Text,
 		Divider = Divider,
@@ -27,25 +26,8 @@ local function Actions(scope: types.AppScope)
 
 	return scope:Page {
 		[Children] = {
-			scope:Fragment {
-				padding = UDim.new(0, 4),
-
-				[Children] = {
-					scope:Text {
-						text = scope:Computed(function(use)
-							return `Selected instance{plural(#use(scope.rawSelected))}`
-						end),
-						fontWeight = Enum.FontWeight.Bold,
-					},
-
-					scope:Fragment {
-						padding = UDim.new(0, 4),
-
-						[Children] = scope:InstancesList {
-							instances = scope.rawSelected,
-						},
-					},
-				},
+			scope:SelectedInstances {
+				selected = scope.rawSelected,
 			},
 
 			scope:Divider(),
