@@ -108,7 +108,7 @@ local function Selection(scope: types.AppScope)
 									colors[color:ToHSV()] = color
 								elseif typeof(color) == "BrickColor" then
 									colors[color.Color:ToHSV()] = color.Color
-								else
+								elseif typeof(color) == "ColorSequence" then
 									for _, keypoint in color.Keypoints do
 										colors[keypoint.Value:ToHSV()] = keypoint.Value
 									end
