@@ -30,7 +30,7 @@ local test: types.TestDefinition = {
 		if #stack > 0 then
 			return {
 				success = false,
-				message = `{#stack} descendants either have the collision and or query property disabled`,
+				message = `{#stack} descendants either have the collision and or query property enabled`,
 				stack = stack,
 			}
 		else
