@@ -91,6 +91,9 @@ local function Test(scope: Fusion.Scope<typeof(Fusion)>, props: TestProps)
 							},
 						},
 					},
+
+					scope:Padding(UDim.new(0, 8)),
+					scope:Rounded(),
 				},
 			},
 
@@ -133,27 +136,32 @@ local function Test(scope: Fusion.Scope<typeof(Fusion)>, props: TestProps)
 					return use(stackOpen)
 				end),
 
-				[Children] = scope:Fragment {
-					[Children] = {
-						scope:Text {
-							text = "Click a stack entry below to view the stack <i>(Very recommended to lock your selection before clicking)</i>",
-							textColor = scope:Theme("subtext"),
+				[Children] = {
+					scope:Fragment {
+						[Children] = {
+							scope:Text {
+								text = "Click a stack entry below to view the stack <i>(Very recommended to lock your selection before clicking)</i>",
+								textColor = scope:Theme("subtext"),
+							},
+
+							scope:Computed(function(use, scope: typeof(scope))
+								local result = use(props.result)
+
+								if not result then
+									return
+								end
+
+								return scope:ForValues(result.stack or {}, function(_, scope: typeof(scope), stackEntry)
+									return scope:StackEntry {
+										stackEntry = stackEntry,
+									}
+								end)
+							end),
 						},
-
-						scope:Computed(function(use, scope: typeof(scope))
-							local result = use(props.result)
-
-							if not result then
-								return
-							end
-
-							return scope:ForValues(result.stack or {}, function(_, scope: typeof(scope), stackEntry)
-								return scope:StackEntry {
-									stackEntry = stackEntry,
-								}
-							end)
-						end),
 					},
+
+					scope:Padding(UDim.new(0, 8)),
+					scope:Rounded(),
 				},
 			},
 		},

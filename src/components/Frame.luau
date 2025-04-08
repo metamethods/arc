@@ -33,9 +33,6 @@ local function Frame(scope: Fusion.Scope<typeof(Fusion)>, props: FrameProps)
 
 		[Children] = {
 			props[Children],
-
-			scope:Padding(props.padding or UDim.new(0, 8)),
-			scope:Rounded(),
 		},
 	}
 end
