@@ -1,5 +1,7 @@
+local pesde = require(script.Parent.pesde)
+
 return {
 	PLUGIN_NAME = "Arc",
 	PLUGIN_ID = "Arc",
-	PLUGIN_VERSION = "1.3.5",
+	PLUGIN_VERSION = pesde.version,
 }
