@@ -40,7 +40,11 @@ local function App(scope: types.AppScope)
 	local tabComponents = map(tabs, function(tab)
 		return tab.component(scope)
 	end)
-	local selectedTab = scope:Value(1)
+	local selectedTab = scope:Value(scope.plugin:GetSetting("selectedTab") or 1)
+
+	scope:Observer(selectedTab):onChange(function()
+		scope.plugin:SetSetting("selectedTab", peek(selectedTab))
+	end)
 
 	return scope:New "Frame" {
 		BackgroundColor3 = scope:Theme("background"),
