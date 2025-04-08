@@ -7,6 +7,7 @@ local Icon = require(script.Parent.Parent.Parent.components.Icon)
 local InstancesList = require(script.Parent.Parent.Parent.components.InstancesList)
 local KeyValue = require(script.Parent.Parent.Parent.components.KeyValue)
 local Page = require(script.Parent.Parent.Parent.components.Page)
+local Section = require(script.Parent.Parent.Parent.components.Section)
 local SelectedInstances = require(script.Parent.Parent.Parent.components.SelectedInstances)
 local Text = require(script.Parent.Parent.Parent.components.Text)
 local Texture = require(script.Parent.Parent.Parent.components.Texture)
@@ -90,6 +91,7 @@ local function Selection(scope: types.AppScope)
 		InstancesList = InstancesList,
 		ExpandableSection = ExpandableSection,
 		SelectedInstances = SelectedInstances,
+		Section = Section,
 		Texture = Texture,
 		Icon = Icon,
 		Color = Color,
@@ -137,68 +139,100 @@ local function Selection(scope: types.AppScope)
 
 				return scope:Fragment {
 					[Children] = {
-						scope:KeyValue {
-							key = "Total Instances",
-							value = computedSelection.totalInstances,
-						},
+						scope:Section {
+							header = scope:Text {
+								text = "Instances",
+								fontWeight = Enum.FontWeight.Bold,
+							},
+							[Children] = scope:Fragment {
+								[Children] = {
+									scope:KeyValue {
+										key = "Total Instances",
+										value = computedSelection.totalInstances,
+									},
 
-						scope:KeyValue {
-							key = "Total Attachments",
-							value = computedSelection.instances["Attachment"] or 0,
-						},
-
-						scope:Fragment {
-							direction = Enum.FillDirection.Horizontal,
-							wraps = true,
-							[Children] = {
-								scope:KeyValue {
-									key = "Total Concurrent Particles",
-									value = round(computedSelection.totalParticleEmission, 2),
-								},
-								scope:KeyValue {
-									key = "Average Concurrent Particles",
-									value = `{round(
-										computedSelection.totalParticleEmission
-											/ (computedSelection.instances["ParticleEmitter"] or 0),
-										2
-									)}/avg`,
+									scope:KeyValue {
+										key = "Total Attachments",
+										value = computedSelection.instances["Attachment"] or 0,
+									},
 								},
 							},
 						},
 
-						scope:Fragment {
-							direction = Enum.FillDirection.Horizontal,
-							wraps = true,
-							[Children] = {
-								scope:KeyValue {
-									key = "Total Particles/s",
-									value = `{round(computedSelection.totalParticlePerSecondEmission, 2)}/s`,
+						scope:Section {
+							header = scope:Fragment {
+								padding = UDim.new(0, 0),
+								[Children] = {
+									scope:Text {
+										text = "Concurrent Particles",
+										fontWeight = Enum.FontWeight.Bold,
+									},
+									scope:Text {
+										text = "Concurrent amount of particles shown at a time in the average lifetime defined for a particle emitter (min + max) / 2",
+										textColor = scope:Theme("subtext"),
+									},
 								},
-								scope:KeyValue {
-									key = "Average Particles/s",
-									value = `{round(
-										computedSelection.totalParticlePerSecondEmission
-											/ (computedSelection.instances["ParticleEmitter"] or 0),
-										2
-									)}/s/avg`,
+							},
+							[Children] = scope:Fragment {
+								[Children] = {
+									scope:KeyValue {
+										key = "Total",
+										value = round(computedSelection.totalParticleEmission, 2),
+									},
+									scope:KeyValue {
+										key = "Per Emitter",
+										value = `{round(
+											computedSelection.totalParticleEmission
+												/ (computedSelection.instances["ParticleEmitter"] or 0),
+											2
+										)}/emitter`,
+									},
 								},
 							},
 						},
 
-						scope:Fragment {
-							direction = Enum.FillDirection.Horizontal,
-							wraps = true,
-							[Children] = {
-								scope:KeyValue {
-									key = "Total Beam Segments",
-									value = computedSelection.totalBeamSegments,
+						scope:Section {
+							header = scope:Text {
+								text = "Particles per Second",
+								fontWeight = Enum.FontWeight.Bold,
+							},
+							[Children] = scope:Fragment {
+								[Children] = {
+									scope:KeyValue {
+										key = "Total/s",
+										value = `{round(computedSelection.totalParticlePerSecondEmission, 2)}/s`,
+									},
+									scope:KeyValue {
+										key = "Total Per Emitter/s",
+										value = `{round(
+											computedSelection.totalParticlePerSecondEmission
+												/ (computedSelection.instances["ParticleEmitter"] or 0),
+											2
+										)}/s/emitter`,
+									},
 								},
-								scope:KeyValue {
-									key = "Average Beam Segements",
-									value = `{round(
-										computedSelection.totalBeamSegments / (computedSelection.instances["Beam"] or 0),
-										2
-									)}/avg`,
+							},
+						},
+
+						scope:Section {
+							header = scope:Text {
+								text = "Beam Segments",
+								fontWeight = Enum.FontWeight.Bold,
+							},
+							[Children] = scope:Fragment {
+								[Children] = {
+									scope:KeyValue {
+										key = "Total",
+										value = computedSelection.totalBeamSegments,
+									},
+									scope:KeyValue {
+										key = "Per Beam",
+										value = `{round(
+											computedSelection.totalBeamSegments
+												/ (computedSelection.instances["Beam"] or 0),
+											2
+										)}/beam`,
+									},
 								},
 							},
 						},
