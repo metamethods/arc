@@ -15,6 +15,9 @@ local function iterColors(instances: { Instance }, transform: (color: Color3, in
 				transformedKeypoints[i] = ColorSequenceKeypoint.new(keypoint.Time, transform(keypoint.Value, instance))
 			end
 			instance.Color = ColorSequence.new(transformedKeypoints)
+		elseif instance:IsA("Highlight") then
+			instance.FillColor = transform(instance.FillColor, instance)
+			instance.OutlineColor = transform(instance.OutlineColor, instance)
 		else -- If the instance has a color property it'll automatically be transformed by the transform function
 			local color: Color3? = (getProperty(instance, "Color") and typeof(instance.Color) == "Color3")
 					and instance.Color
