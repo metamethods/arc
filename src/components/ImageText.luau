@@ -8,13 +8,16 @@ local Children = Fusion.Children
 
 type UsedAs<T> = Fusion.UsedAs<T>
 
-type TextureProps = {
-	texture: number | string,
+type ImageTextProps = {
+	image: number | string,
+	text: number | string,
 	backgroundColor: UsedAs<Color3>?,
 	size: UsedAs<UDim2>?,
+	textAlignment: UsedAs<Enum.TextXAlignment>?,
+	[typeof(Children)]: Fusion.Child?,
 }
 
-local function Texture(scope: Fusion.Scope<typeof(Fusion)>, props: TextureProps)
+local function ImageText(scope: Fusion.Scope<typeof(Fusion)>, props: ImageTextProps)
 	local scope = scope:deriveScope({
 		Fragment = Fragment,
 		TextBox = TextBox,
@@ -22,7 +25,7 @@ local function Texture(scope: Fusion.Scope<typeof(Fusion)>, props: TextureProps)
 		Theme = Theme,
 	})
 
-	local image = if typeof(props.texture) == "number" then `rbxassetid://{props.texture}` else props.texture
+	local image = if typeof(props.image) == "number" then `rbxassetid://{props.image}` else props.image
 
 	return scope:Fragment {
 		size = UDim2.fromScale(0, 0),
@@ -40,15 +43,17 @@ local function Texture(scope: Fusion.Scope<typeof(Fusion)>, props: TextureProps)
 			},
 
 			scope:TextBox {
-				text = image,
-				textXAlignment = Enum.TextXAlignment.Right,
+				text = props.text,
+				textXAlignment = props.textAlignment,
 				backgroundColor = props.backgroundColor,
 				size = UDim2.fromScale(0, 0),
 				automaticSize = Enum.AutomaticSize.Y,
 				editable = false,
 			},
+
+			props[Children],
 		},
 	}
 end
 
-return Texture
+return ImageText
