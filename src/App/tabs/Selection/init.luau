@@ -1,3 +1,5 @@
+local SelectionService = game:GetService("Selection")
+
 local Button = require(script.Parent.Parent.Parent.components.Button)
 local Color = require(script.Parent.Parent.Parent.components.Color)
 local Divider = require(script.Parent.Parent.Parent.components.Divider)
@@ -10,7 +12,8 @@ local Page = require(script.Parent.Parent.Parent.components.Page)
 local Section = require(script.Parent.Parent.Parent.components.Section)
 local SelectedInstances = require(script.Parent.Parent.Parent.components.SelectedInstances)
 local Text = require(script.Parent.Parent.Parent.components.Text)
-local Texture = require(script.Parent.Parent.Parent.components.Texture)
+local TextBox = require(script.Parent.Parent.Parent.components.TextBox)
+local ImageText = require(script.Parent.Parent.Parent.components.ImageText)
 local Fusion = require(script.Parent.Parent.Parent.packages.Fusion)
 local types = require(script.Parent.Parent.Parent.types)
 local ForKeyValues = require(script.Parent.Parent.Parent.utils.ForKeyValues)
@@ -32,6 +35,7 @@ type ComputedSelection = {
 	instances: { [string]: number },
 	colors: { [string]: Color3 },
 	textures: { [string]: string },
+	particleEmitters: { ParticleEmitter },
 }
 
 local function computeSelection(selection: { Instance }): ComputedSelection
@@ -39,6 +43,7 @@ local function computeSelection(selection: { Instance }): ComputedSelection
 	local totalParticleEmission = 0
 	local totalParticlePerSecondEmission = 0
 	local totalBeamSegments = 0
+	local particleEmitters = {}
 	local instancesTable = {}
 	local colors = {}
 	local textures = {}
@@ -56,6 +61,7 @@ local function computeSelection(selection: { Instance }): ComputedSelection
 				totalParticleEmission += emission(instance)
 				totalParticlePerSecondEmission += emissionBySecond(instance)
 				textures[instance.Texture] = instance.Texture
+				table.insert(particleEmitters, instance)
 			end
 
 			local color: (Color3 | BrickColor | ColorSequence)? = getProperty(instance, "Color3", "Color")
@@ -74,6 +80,10 @@ local function computeSelection(selection: { Instance }): ComputedSelection
 		end
 	end
 
+	table.sort(particleEmitters, function(a, b)
+		return a.ZOffset > b.ZOffset
+	end)
+
 	return {
 		totalInstances = totalInstances,
 		totalParticleEmission = totalParticleEmission,
@@ -82,6 +92,7 @@ local function computeSelection(selection: { Instance }): ComputedSelection
 		instances = instancesTable,
 		colors = colors,
 		textures = textures,
+		particleEmitters = particleEmitters,
 	}
 end
 
@@ -92,13 +103,14 @@ local function Selection(scope: types.AppScope)
 		ExpandableSection = ExpandableSection,
 		SelectedInstances = SelectedInstances,
 		Section = Section,
-		Texture = Texture,
+		ImageText = ImageText,
 		Icon = Icon,
 		Color = Color,
 		Button = Button,
 		Divider = Divider,
 		Fragment = Fragment,
 		KeyValue = KeyValue,
+		TextBox = TextBox,
 		Text = Text,
 		Theme = Theme,
 		ForKeyValues = ForKeyValues,
@@ -293,9 +305,39 @@ local function Selection(scope: types.AppScope)
 								[Children] = scope:ForValues(
 									computedSelection.textures,
 									function(_, scope: typeof(scope), texture)
-										return scope:Texture {
-											texture = texture,
+										return scope:ImageText {
+											image = texture,
+											text = texture,
+											textAlignment = Enum.TextXAlignment.Right,
 											backgroundColor = scope:Theme("background"),
+										}
+									end
+								),
+							},
+						},
+
+						scope:ExpandableSection {
+							open = scope:Value(false),
+							title = "Z-Offsets",
+							[Children] = scope:Fragment {
+								direction = Enum.FillDirection.Horizontal,
+								wraps = true,
+								padding = UDim.new(0, 8),
+
+								[Children] = scope:ForValues(
+									computedSelection.particleEmitters,
+									function(_, scope: typeof(scope), emitter)
+										return scope:ImageText {
+											image = emitter.Texture,
+											text = `ZOffset: {emitter.ZOffset}`,
+											backgroundColor = scope:Theme("background"),
+											[Children] = scope:Button {
+												backgroundColor = scope:Theme("background"),
+												text = "Goto",
+												clicked = function()
+													SelectionService:Set({ emitter })
+												end,
+											},
 										}
 									end
 								),
