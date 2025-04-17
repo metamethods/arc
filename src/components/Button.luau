@@ -11,6 +11,7 @@ local OnEvent = Fusion.OnEvent
 type UsedAs<T> = Fusion.UsedAs<T>
 
 type ButtonProps = {
+	backgroundColor: UsedAs<Color3>?,
 	size: UDim2?,
 	text: UsedAs<string>?,
 	fontWeight: Enum.FontWeight?,
@@ -53,7 +54,7 @@ local function Button(scope: Fusion.Scope<typeof(Fusion)>, props: ButtonProps)
 	end)
 
 	return scope:New "TextButton" {
-		BackgroundColor3 = scope:Computed(function(use, scope)
+		BackgroundColor3 = props.backgroundColor or scope:Computed(function(use, scope)
 			return if use(props.primary) then use(scope:Theme("accent")) else use(scope:Theme("middle"))
 		end),
 		Size = props.size,
